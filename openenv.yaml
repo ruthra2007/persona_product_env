@@ -1,0 +1,49 @@
+name: persona_product_env
+version: "1.0.0"
+description: >
+  Reinforcement-learning environment that simulates real-world product
+  decision-making tasks.  An AI agent observes a user persona, budget,
+  and preferences, then selects the best product and provides reasoning.
+  The environment returns shaped rewards (0.0-1.0) based on budget fit,
+  preference match, and reasoning quality.
+
+author: AI Systems Engineer
+license: MIT
+
+environment:
+  module: persona_product_env.env
+  class: PersonaProductEnv
+
+models:
+  observation: persona_product_env.models.Observation
+  action: persona_product_env.models.Action
+  reward: persona_product_env.models.Reward
+
+tasks:
+  - name: easy_student_smartphone
+    module: persona_product_env.tasks.easy
+    object: EASY_TASK
+    difficulty: easy
+  - name: medium_photographer_tradeoff
+    module: persona_product_env.tasks.medium
+    object: MEDIUM_TASK
+    difficulty: medium
+  - name: hard_business_conflicting
+    module: persona_product_env.tasks.hard
+    object: HARD_TASK
+    difficulty: hard
+
+grader:
+  module: persona_product_env.grader
+  function: grade
+
+inference:
+  script: inference.py
+  default_model: "Qwen/Qwen2.5-72B-Instruct"
+  default_api_base: "https://router.huggingface.co/v1"
+
+runtime:
+  python: "3.10"
+  max_cpu: 2
+  max_ram_gb: 8
+  max_runtime_minutes: 20
