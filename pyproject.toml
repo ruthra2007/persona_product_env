@@ -1,0 +1,10 @@
+[project]
+name = "persona_product_env"
+version = "0.1.0"
+description = "Persona Product Recommendation Environment"
+authors = [{ name = "Ruthra" }]
+dependencies = []
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
