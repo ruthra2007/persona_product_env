@@ -5,12 +5,9 @@ import os
 import sys
 from typing import List, Optional
 
-from flask import Flask, request, jsonify
 from openai import OpenAI
 
 # ── setup ─────────────────────────────────────────────
-app = Flask(__name__)
-
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from persona_product_env.env import PersonaProductEnv
@@ -31,9 +28,11 @@ def _build_client() -> OpenAI:
 # ── CORE LOGIC ───────────────────────────────────────
 
 def main():
-    client = _build_client()
+    print("[START] Running inference...")
 
+    client = _build_client()
     results = []
+
     for task in ALL_TASKS:
         env = PersonaProductEnv()
         obs = env.reset(task)
@@ -62,27 +61,16 @@ def main():
 
         results.append({"task": task.name, "success": True})
 
-    return results
+    print("[END] Completed successfully")
+    print(json.dumps(results, indent=2))
 
 
-# ── API ENDPOINTS ────────────────────────────────────
-@app.route("/")
-def home():
-    return "Persona Product Env running ✅"
-
-
-@app.route("/reset", methods=["POST"])
-def reset():
-    return jsonify({
-        "observation": {},
-        "reward": 1.0,
-        "done": True,
-        "info": {}
-    })
-
-
-# ── RUN SERVER ───────────────────────────────────────
+# ── ENTRY POINT ──────────────────────────────────────
 
 if __name__ == "__main__":
-    print("🚀 Starting server on port 7860...")
-    app.run(host="0.0.0.0", port=8000)
+    try:
+        main()
+        sys.exit(0)
+    except Exception as e:
+        print(f"[ERROR] {str(e)}")
+        sys.exit(1)
